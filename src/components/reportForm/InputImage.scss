@@ -1,0 +1,25 @@
+.InputImage {
+  background: transparent;
+  border: 2px dashed;
+  border-radius: 2px;
+  min-height: 50px;
+  width: 100%;
+  margin: 0 0 0 0;
+  text-align: center;
+  line-height: 50px;
+  transition: .12s;
+  cursor: pointer;
+  opacity: .75;
+  overflow: hidden;
+  i {
+    font-size: 24px;
+    margin: 0 8px;
+    transform: translateY(3px);
+  }
+  &:hover {
+    opacity: 1;
+  }
+  img {
+    width: 100%;
+  }
+}

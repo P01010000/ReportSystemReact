@@ -4,7 +4,6 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import immutable from 'immutable';
-import { ModeSwitch } from 'chayns-components';
 import App from './components/App';
 import rootReducer from './reducers';
 import SERVER_URL from './constants/server-url';
@@ -40,21 +39,12 @@ async function init() {
     await chayns.ready;
 
     const tappElement = document.querySelector('.tapp');
-    ReactDOM.render(<Provider store={store}>
-        <App/>
-    </Provider>, tappElement);
-
-    /**
-     * Initialize the ModeSwitch. The available modes are 'user mode' (default) and 'chayns® manager'.
-     * You can specify content to display according to the current mode (see chayns 'mode' component).
-     */
-    ModeSwitch.init({
-        groups: [{
-            id: 1,
-            uacIds: [1],
-            name: 'chayns® manager'
-        }]
-    });
+    ReactDOM.render(
+        <Provider store={store}>
+            <App/>
+        </Provider>
+        , tappElement
+    );
 
     // dispatch async example action
     store.dispatch(loadData());
