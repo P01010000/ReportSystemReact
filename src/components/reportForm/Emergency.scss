@@ -1,0 +1,9 @@
+.emergencySwitch {
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-right: 10px;
+  :last-child {
+    margin-left: auto;
+  }
+}

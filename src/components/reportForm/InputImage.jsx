@@ -7,6 +7,7 @@ class InputImage extends React.Component {
     this.state = { imageSrc: null };
     this.handleClick = this.handleClick.bind(this);
     this.handleLoad = this.handleLoad.bind(this);
+    this.handleUnload = this.handleUnload.bind(this);
   }
 
   handleClick() {
@@ -25,20 +26,25 @@ class InputImage extends React.Component {
     }
   }
 
+  handleUnload() {
+    this.setState({ imageSrc: null });
+  }
+
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.state.imageSrc === null ?
           <div className="InputImage" onClick={this.handleClick}>
             <i className="fa fa-picture-o" />Bild auswählen
           </div>
           :
-          <div className="InputImage" onClick={this.handleClick} style={{ lineHeight: 0 }} >
+          <div className="PreviewImage" onClick={this.handleUnload} >
+            <div><i className="fa fa-times" /></div>
             <img src={this.state.imageSrc} alt="" />
           </div>
         }
 
-      </div>
+      </React.Fragment>
     );
   }
 }
