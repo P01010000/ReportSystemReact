@@ -38,8 +38,8 @@ class InputImage extends React.Component {
             <i className="fa fa-picture-o" />Bild auswählen
           </div>
           :
-          <div className="PreviewImage" onClick={this.handleUnload} >
-            <div><i className="fa fa-times" /></div>
+          <div className="PreviewImage">
+            <div onClick={this.handleUnload}><i className="fa fa-times" /></div>
             <img src={this.state.imageSrc} alt="" />
           </div>
         }

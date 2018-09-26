@@ -73,7 +73,13 @@ class ReportListItem extends React.Component {
                 </div>
               </div>
               <Accordion head="Verlauf" isWrapped>
-                  {this.props.history && this.props.history.map(({ date, message, user }) => (<div className="historyItem"><div>{date}</div><div>{user}</div><div>{message}</div></div>))}
+                  {this.props.history && this.props.history.map(({ date, message, user }) => (
+                    <div className="historyItem">
+                      <div>{date}</div>
+                      <div>{user}</div>
+                      <div>{message}</div>
+                    </div>
+                  ))}
               </Accordion>
               <div className="ListItem__content">
                 <div style={{ textAlign: 'center' }}>
