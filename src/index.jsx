@@ -8,6 +8,8 @@ import App from './components/App';
 import rootReducer from './reducers';
 import SERVER_URL from './constants/server-url';
 import { loadData } from './actions/fetchData';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { RegisterLoginCallback } from './helper/login';
 
 /**
  * The function waits till the chayns api is successfully loaded and
@@ -30,13 +32,13 @@ async function init() {
         storeMiddleware.push(require('redux-logger').default);
     }
 
-    console.log(storeMiddleware);
     const store = createStore(
         rootReducer,
-        applyMiddleware(...storeMiddleware)
+        composeWithDevTools(applyMiddleware(...storeMiddleware))
     );
 
     await chayns.ready;
+    chayns.register({ apiDialogs: true });
 
     const tappElement = document.querySelector('.tapp');
     ReactDOM.render(
@@ -44,8 +46,9 @@ async function init() {
             <App/>
         </Provider>
         , tappElement
-    );
+        );
 
+    RegisterLoginCallback(() => store.dispatch(loadData()));
     // dispatch async example action
     store.dispatch(loadData());
 }

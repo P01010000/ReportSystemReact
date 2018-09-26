@@ -1,9 +1,13 @@
 import { combineReducers } from 'redux';
 
-import userList from './userList';
-import fetchData from './fetchData';
+import fetchYourReports from './fetchYourReports';
+import fetchOpenReports from './fetchOpenReports';
+import fetchYourTasks from './fetchYourTasks';
+import fetchReportsInProgress from './fetchReportsInProgress';
 
 export default combineReducers({
-    userList,
-    fetchData
+    fetchYourReports,
+    fetchOpenReports,
+    fetchYourTasks,
+    fetchReportsInProgress
 });

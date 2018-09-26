@@ -12,9 +12,12 @@
   opacity: .75;
   overflow: hidden;
   i {
-    font-size: 24px;
+    vertical-align: text-top;
     margin: 0 8px;
     transform: translateY(3px);
+    &.dropAnimation {
+      animation: dropAnimation infinite 1.5s;
+    }
   }
   &:hover {
     opacity: 1;
@@ -38,5 +41,17 @@
   }
   img {
     width: 100%;
+  }
+}
+
+@keyframes dropAnimation {
+  0% {
+    transform: translate3d(0, 0%, 0);
+  }
+  50% {
+    transform: translate3d(0, -18%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0%, 0);
   }
 }

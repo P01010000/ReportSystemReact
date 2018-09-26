@@ -1,4 +1,6 @@
 import React from 'react';
+import { FileUpload } from 'chayns-components';
+import 'chayns-components/lib/react-chayns-upload/index.css';
 import './InputImage.scss';
 
 class InputImage extends React.Component {
@@ -34,12 +36,15 @@ class InputImage extends React.Component {
     return (
       <React.Fragment>
         {this.state.imageSrc === null ?
-          <div className="InputImage" onClick={this.handleClick}>
+          <FileUpload type="image" onChange={(files, validFiles) => this.handleLoad({ target: { files: validFiles } })} />
+          /*
+          <div className="InputImage" onClick={this.handleClick} onDragOver={this.handleDragOver}>
             <i className="fa fa-picture-o" />Bild auswählen
           </div>
+          */
           :
           <div className="PreviewImage">
-            <div onClick={this.handleUnload}><i className="fa fa-times" /></div>
+            <div onClick={this.handleUnload} onKeyUp={() => null}><i className="fa fa-times" /></div>
             <img src={this.state.imageSrc} alt="" />
           </div>
         }

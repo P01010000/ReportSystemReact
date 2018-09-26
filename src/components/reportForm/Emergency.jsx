@@ -10,7 +10,7 @@ class Emergency extends React.Component {
 
   handleChange() {
     if (!this.state.checked) {
-      chayns.dialog.confirm('Bist du sicher?', 'Einen Notfall zu melden hat weitgehende Konsequenzen. Bist du sicher, dass es sich um einen Notfall handelt?', [
+      chayns.dialog.confirm('Notfall melden', 'Einen Notfall zu melden hat weitgehende Konsequenzen. Bist du sicher, dass es sich um einen Notfall handelt?', [
         { text: 'Fortfahren', buttonType: 1 },
         { text: 'Kein Notfall', buttonType: 0 },
       ])

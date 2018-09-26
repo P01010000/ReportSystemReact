@@ -121,10 +121,11 @@
   padding: 4px 9px;
   display: flex;
   :first-child {
-    flex: 0 80px;
+    flex: 0 1 100px;
+    white-space: nowrap;
   }
   :last-child {
-    flex: 1 0;
+    flex: 1 0 0%;
     margin-left: 8px; 
   }
 }
