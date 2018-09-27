@@ -1,15 +1,31 @@
 import React from 'react';
-import { HEADLINE, DESCRIPTION } from '../../constants/text';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const Intro = () => (
+const Intro = ({ title, introduction }) => (
     <div className="tapp__intro">
         <h1 className="headline">
-            {HEADLINE}
+            {title}
         </h1>
         <p>
-            {DESCRIPTION}
+            {introduction}
         </p>
     </div>
 );
 
-export default Intro;
+Intro.propTypes = {
+	title: PropTypes.string,
+	introduction: PropTypes.string
+}
+
+Intro.defaultProps = {
+	title: 'Reportsystem',
+	introduction: 'Hier kannst du einen neuen Störfall melden oder Störfälle verwalten'
+}
+
+const mapStateToProps = state => ({
+	title: state.fetchBoardSettings.title,
+	introduction: state.fetchBoardSettings.introduction
+})
+
+export default connect(mapStateToProps)(Intro);

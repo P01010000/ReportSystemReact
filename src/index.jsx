@@ -7,6 +7,7 @@ import immutable from 'immutable';
 import App from './components/App';
 import rootReducer from './reducers';
 import SERVER_URL from './constants/server-url';
+import { loadBoardSettings } from './actions/fetchBoardSettings';
 import { loadData } from './actions/fetchData';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { RegisterLoginCallback } from './helper/login';
@@ -50,6 +51,7 @@ async function init() {
 
     RegisterLoginCallback(() => store.dispatch(loadData()));
     // dispatch async example action
+    store.dispatch(loadBoardSettings());
     store.dispatch(loadData());
 }
 
