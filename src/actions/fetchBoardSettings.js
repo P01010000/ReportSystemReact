@@ -5,13 +5,13 @@ export const saveBoardSettings = data => ({
 });
 
 export const loadBoardSettings = () => async (dispatch) => {
-  /* const res = await fetch(
+  const res = await fetch(
    `https://localhost:5001/api/boardSettings/${chayns.env.site.locationId}/${chayns.env.site.tapp.id}`,
    { headers: { 'Content-Type': 'application/json' } }
   );
   if (!res.ok) return; // error
   const data = await res.json();
-  */
+  /*
   const data = {
     departments: [
     {
@@ -78,5 +78,6 @@ export const loadBoardSettings = () => async (dispatch) => {
     }
     ]
   };
+  */
   dispatch(saveBoardSettings(data));
 };

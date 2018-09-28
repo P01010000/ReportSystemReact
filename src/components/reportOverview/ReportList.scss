@@ -73,7 +73,7 @@
       &.ListItem--accordion--open {
           background-color: #fff;
           .ListItem__body {
-              max-height: 999px;
+              max-height: 9999px;
               transition: max-height 0.5s cubic-bezier(0.5, 0, 1, 0) 0s;
           }
           .ListItem__head {

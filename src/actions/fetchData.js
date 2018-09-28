@@ -26,7 +26,69 @@ export const saveReportsInProgress = data => ({
  * Example for an async actions, requires redux thunk middleware
  * //redux.js.org/docs/advanced/AsyncActions
  */
-export const loadData = () => (dispatch) => {
+export const loadData = () => async (dispatch) => {
+    let result = await fetch(
+        'https://localhost:5001/api/report?type=open',
+        {
+            headers:
+            {
+                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    if (!result.ok) return;
+    let data = await result.json();
+
+    dispatch(saveOpenReports(data));
+
+    result = await fetch(
+        'https://localhost:5001/api/report?type=yourTasks',
+        {
+            headers:
+            {
+                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    if (!result.ok) return;
+    data = await result.json();
+
+    dispatch(saveYourTasks(data));
+
+    result = await fetch(
+        'https://localhost:5001/api/report?type=yourReports',
+        {
+            headers:
+            {
+                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    if (!result.ok) return;
+    data = await result.json();
+
+    dispatch(saveYourReports(data));
+
+    result = await fetch(
+        'https://localhost:5001/api/report?type=other',
+        {
+            headers:
+            {
+                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    if (!result.ok) return;
+    data = await result.json();
+
+    dispatch(saveReportsInProgress(data));
+
+    return;
+
     const yourReports = [
         {
             id: 1,
