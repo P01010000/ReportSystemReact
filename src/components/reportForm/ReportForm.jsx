@@ -78,6 +78,7 @@ class ReportForm extends React.Component {
 
   async handleSubmit() {
     this.setState({ ready: false });
+    chayns.showWaitCursor();
     try {
       await Login();
 
@@ -105,6 +106,7 @@ class ReportForm extends React.Component {
     } catch (ex) {
       chayns.dialog.alert(ex.message);
     }
+    chayns.hideWaitCursor();
     this.setState({ ready: true });
   }
 

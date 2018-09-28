@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Accordion, Button } from 'chayns-components';
 
 class ReportListItem extends React.Component {
@@ -15,10 +16,12 @@ class ReportListItem extends React.Component {
   }
 
   static propTypes = {
+    id: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     details: PropTypes.string,
     creationTime: PropTypes.instanceOf(Date).isRequired,
     destinationName: PropTypes.string.isRequired,
+    departments: PropTypes.instanceOf(Array).isRequired,
     locationId: PropTypes.number.isRequired,
     emergency: PropTypes.bool,
     imageUrl: PropTypes.string.isRequired,
@@ -28,8 +31,9 @@ class ReportListItem extends React.Component {
     revisorId: PropTypes.number,
     revisorFirstName: PropTypes.string,
     revisorLastName: PropTypes.string,
+    departmentId: PropTypes.number.isRequired,
+    departmentName: PropTypes.string.isRequired,
     uacGroup: PropTypes.number.isRequired,
-    uacGroupName: PropTypes.string.isRequired,
     history: PropTypes.instanceOf(Array),
     type: PropTypes.number.isRequired,
   }
@@ -47,10 +51,120 @@ class ReportListItem extends React.Component {
     super();
     this.state = { open: false };
     this.toggleOpen = this.toggleOpen.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.updateDepartment = this.updateDepartment.bind(this);
+    this.changeReport = this.changeReport.bind(this);
+    this.closeReport = this.closeReport.bind(this);
   }
 
   toggleOpen() {
     this.setState({ open: !this.state.open });
+  }
+
+  async sendMessage() {
+    const { buttonType, text } = await chayns.dialog.input({
+      title: 'Nachricht schicken',
+      message: `Gib hier deine Nachricht für ${this.props.creatorFirstName} ${this.props.creatorLastName} ein.`,
+      buttons: [{ text: 'Senden', buttonType: 1 }]
+    });
+
+    if (buttonType !== 1 || !text) return;
+
+    chayns.intercom.sendMessageToUser(this.props.creatorId, { text });
+  }
+
+  async updateDepartment() {
+    const data = await chayns.dialog.select({
+      title: 'Ort auswählen',
+      message: 'Wo ist das Problem aufgetreten?',
+      list: this.props.departments.map(d => ({ name: d.name, value: d }))
+    });
+
+    if (data.buttonType !== 1 || data.selection.length !== 1) {
+      // error
+      return;
+    }
+    const did = data.selection[0].value.id;
+
+    if (did === this.props.uacGroup) return;
+
+    const { buttonType, text } = await chayns.dialog.input({
+      title: 'Kommentar',
+      message: 'Möchtest du kommentieren, warum du den Report in eine andere Abteilung verschiebst?',
+      buttons: [{ text: 'Ändern', buttonType: 1 }]
+    });
+
+    if (buttonType !== 1) return;
+    fetch(
+      `https://localhost:5001/api/report/${this.props.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Action: 2,
+          DepartmentId: did,
+          Message: text
+        })
+      }
+    );
+  }
+
+  async changeReport() {
+    let body = {};
+    switch (this.props.type) {
+      case 1:
+      body = { revisorId: chayns.env.user.id, action: 2 };
+      break;
+      case 2:
+      body = { revisorId: null, action: 4 };
+      break;
+      case 3:
+      body = { action: 5, status: 3 };
+      break;
+      default:
+      return;
+    }
+
+    fetch(
+      `https://localhost:5001/api/report/${this.props.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+    );
+  }
+
+  async closeReport() {
+    const { buttonType, text } = await chayns.dialog.input({
+      title: 'Abschließen',
+      message: 'Gib hier eine Nachricht ein',
+      button: [{ text: 'Abschließen' }]
+    });
+
+    if (buttonType !== 1) return;
+
+    fetch(
+      `https://localhost:5001/api/report/${this.props.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          Action: 3,
+          Status: 2,
+          Message: text
+        })
+      }
+    );
   }
 
   render() {
@@ -73,7 +187,7 @@ class ReportListItem extends React.Component {
                 <div style={{ display: 'flex', margin: '4px 0' }}>
                   <div>Ersteller</div>
                   <div style={{ marginLeft: 'auto' }}>
-                    {this.props.type !== 3 ? <a href="#"><i className="fa fa-comments" /> {this.props.creatorFirstName} {this.props.creatorLastName}</a> : `${this.props.creatorFirstName} ${this.props.creatorLastName}`}
+                    {this.props.type !== 3 ? <a href="#" onClick={this.sendMessage}><i className="fa fa-comments" /> {this.props.creatorFirstName} {this.props.creatorLastName}</a> : `${this.props.creatorFirstName} ${this.props.creatorLastName}`}
                   </div>
                 </div>
                 {this.props.type > 1 && this.props.revisorId > 0 && this.props.revisorFirstName && this.props.revisorLastName ?
@@ -88,7 +202,7 @@ class ReportListItem extends React.Component {
                 <div style={{ display: 'flex', margin: '4px 0' }}>
                   <div>Abteilung</div>
                   <div style={{ marginLeft: 'auto' }}>
-                    {[1, 2].includes(this.props.type) ? <Button chooseButton>{this.props.uacGroupName}</Button> : this.props.uacGroupName}
+                    {[1, 2].includes(this.props.type) ? <Button chooseButton onClick={this.updateDepartment}>{this.props.departmentName}</Button> : this.props.departmentName}
                   </div>
                 </div>
                 <div style={{ padding: '8px 0 12px' }}>
@@ -109,7 +223,7 @@ class ReportListItem extends React.Component {
               <div className="ListItem__content">
                 <div style={{ textAlign: 'center' }}>
                   {[1, 2, 3].includes(this.props.type) ?
-                    <Button>
+                    <Button onClick={this.changeReport}>
                       {
                         {
                           1: 'Übernehmen',
@@ -119,7 +233,7 @@ class ReportListItem extends React.Component {
                       }
                     </Button> : null
                   }
-                  {[1, 2].includes(this.props.type) ? <Button style={{ marginLeft: '8px' }}>Abschließen</Button> : null}
+                  {[1, 2].includes(this.props.type) ? <Button style={{ marginLeft: '8px' }} onClick={this.closeReport}>Abschließen</Button> : null}
                 </div>
               </div>
             </div>
@@ -129,4 +243,8 @@ class ReportListItem extends React.Component {
   }
 }
 
-export default ReportListItem;
+const mapStateToProps = state => ({
+  departments: state.fetchBoardSettings.departments
+});
+
+export default connect(mapStateToProps)(ReportListItem);
