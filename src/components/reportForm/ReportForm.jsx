@@ -10,6 +10,11 @@ import './ReportForm.scss';
 
 
 class ReportForm extends React.Component {
+  static propTypes = {
+    departments: PropTypes.instanceOf(Array).isRequired,
+    destinations: PropTypes.instanceOf(Array).isRequired
+  }
+
   constructor() {
     super();
     this.state = {
@@ -19,8 +24,8 @@ class ReportForm extends React.Component {
       destinationId: 0,
       destinationName: 'Wählen',
       departmentId: null,
-      departmentName: null,
-      emergency: false
+      emergency: false,
+      ready: true
     };
     this.getLocation = this.getLocation.bind(this);
     this.chooseLocation = this.chooseLocation.bind(this);
@@ -37,11 +42,9 @@ class ReportForm extends React.Component {
     if (this.state.locationId === 0) return;
     chayns.getGeoLocation()
     .then(({ latitude, longitude }) => {
-      const distances = this.props.destinations.map(
-        d => ({...d, distance: Haversine(latitude, longitude, d.latitude, d.longitude) })
-      );
-      const nearest = distances.reduce((p, e) => p && p.distance <= e.distance ? p : e, null);
-      
+      const distances = this.props.destinations.map(d => ({ ...d, distance: Haversine(latitude, longitude, d.latitude, d.longitude) }));
+      const nearest = distances.reduce((p, e) => p && (p.distance <= e.distance ? p : e), null);
+
       if (nearest) this.setState({ destinationId: nearest.Id, destinationName: nearest.name });
     });
   }
@@ -52,13 +55,16 @@ class ReportForm extends React.Component {
       message: 'Wo ist das Problem aufgetreten?',
       list: this.props.destinations.map(d => ({ name: d.name, value: d }))
     }).then((data) => {
-      if (data.buttonType === 1 && data.selection.length) this.setState(
-        { destinationId: data.selection[0].value.id, destinationName: data.selection[0].value.name }
-      )
+      if (data.buttonType === 1 && data.selection.length) {
+        this.setState({
+          destinationId: data.selection[0].value.id,
+          destinationName: data.selection[0].value.name
+        });
+      }
     });
   }
 
-  toggleEmergency(value) {
+  toggleEmergency() {
     if (!this.state.emergency) {
       chayns.dialog.confirm('Notfall melden', 'Einen Notfall zu melden hat weitgehende Konsequenzen. Bist du sicher, dass es sich um einen Notfall handelt?', [
         { text: 'Fortfahren', buttonType: 1 },
@@ -71,32 +77,35 @@ class ReportForm extends React.Component {
   }
 
   async handleSubmit() {
+    this.setState({ ready: false });
     try {
       await Login();
-      
-      await fetch('https://localhost:5001',
+
+      await fetch(
+        'https://localhost:5001/api/report',
         {
           method: 'POST',
-          headers: 
+          headers:
           {
-            'Authorization': `Bearer ${chayns.env.user.tobitAccessToken}`,
+            Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
             'Content-Type': 'application/json'
           },
           body:
-          {
+          JSON.stringify({
             creatorId: chayns.env.user.id,
             imageUrl: this.state.imageUrl,
             description: this.state.description,
             details: this.state.details,
             destinationId: this.state.destinationId,
             departmentId: this.state.departmentId
-          }
+          })
         }
       );
       chayns.dialog.alert('Dein Report wurde abgeschickt');
-    } catch(ex) {
+    } catch (ex) {
       chayns.dialog.alert(ex.message);
     }
+    this.setState({ ready: true });
   }
 
   handleLoad(urls) {
@@ -139,20 +148,20 @@ class ReportForm extends React.Component {
           <h2>Empfänger auswählen</h2>
           {this.props.departments.map(({ id, name }) => (
             <div key={id} style={{ margin: '4px 0' }}>
-              <input type="radio" className="radio" id={`group${id}`} name="group" onChange={() => this.setState({ departmentId: id, departmentName: name })} />
+              <input type="radio" className="radio" id={`group${id}`} name="group" onChange={() => this.setState({ departmentId: id })} />
               <label htmlFor={`group${id}`}>{name}</label>
             </div>
           ))}
           <div className="emergencySwitch">
             <h2>Notfall</h2>
             <div>
-              <Checkbox toggleButton={true} checked={this.state.emergency} onChange={this.toggleEmergency} />
+              <Checkbox toggleButton checked={this.state.emergency} onChange={this.toggleEmergency} />
             </div>
           </div>
           <div style={{ textAlign: 'center', margin: '15px 0' }} >
             <Button
               onClick={this.handleSubmit}
-              disabled={false && !(this.state.imageUrl && this.state.description && this.state.destinationId && this.state.departmentId)}
+              disabled={!(this.state.imageUrl && this.state.description && this.state.destinationId && this.state.departmentId && this.state.ready)}
             >
               Abschicken
             </Button>
@@ -166,6 +175,6 @@ class ReportForm extends React.Component {
 const mapStateToProps = state => ({
   destinations: state.fetchBoardSettings.destinations,
   departments: state.fetchBoardSettings.departments
-})
+});
 
 export default connect(mapStateToProps)(ReportForm);
