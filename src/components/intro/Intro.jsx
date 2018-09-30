@@ -14,18 +14,18 @@ const Intro = ({ title, introduction }) => (
 );
 
 Intro.propTypes = {
-	title: PropTypes.string,
-	introduction: PropTypes.string
-}
+  title: PropTypes.string,
+  introduction: PropTypes.string
+};
 
 Intro.defaultProps = {
-	title: 'Reportsystem',
-	introduction: 'Hier kannst du einen neuen Störfall melden oder Störfälle verwalten'
-}
+  title: 'Reportsystem',
+  introduction: 'Hier kannst du einen neuen Störfall melden oder Störfälle verwalten'
+};
 
 const mapStateToProps = state => ({
-	title: state.fetchBoardSettings.title,
-	introduction: state.fetchBoardSettings.introduction
-})
+  title: state.fetchBoardSettings.title,
+  introduction: state.fetchBoardSettings.introduction
+});
 
 export default connect(mapStateToProps)(Intro);

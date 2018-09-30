@@ -31,10 +31,12 @@ class ReportListItem extends React.Component {
     revisorId: PropTypes.number,
     revisorFirstName: PropTypes.string,
     revisorLastName: PropTypes.string,
-    departmentId: PropTypes.number.isRequired,
     departmentName: PropTypes.string.isRequired,
     uacGroup: PropTypes.number.isRequired,
     history: PropTypes.instanceOf(Array),
+    open: PropTypes.bool,
+    fixed: PropTypes.bool,
+    toggleOpen: PropTypes.func.isRequired,
     type: PropTypes.number.isRequired,
   }
 
@@ -45,32 +47,31 @@ class ReportListItem extends React.Component {
     details: null,
     emergency: false,
     history: [],
+    open: false,
+    fixed: false
   }
 
   constructor() {
     super();
-    this.state = { open: false };
-    this.toggleOpen = this.toggleOpen.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.updateDepartment = this.updateDepartment.bind(this);
     this.changeReport = this.changeReport.bind(this);
     this.closeReport = this.closeReport.bind(this);
   }
 
-  toggleOpen() {
-    this.setState({ open: !this.state.open });
-  }
-
-  async sendMessage() {
+  async sendMessage(creator = true) {
+    const id = creator ? this.props.creatorId : this.props.revisorId;
+    const firstName = creator ? this.props.creatorFirstName : this.props.revisorFirstName;
+    const lastName = creator ? this.props.creatorFirstName : this.props.revisorLastName;
     const { buttonType, text } = await chayns.dialog.input({
       title: 'Nachricht schicken',
-      message: `Gib hier deine Nachricht für ${this.props.creatorFirstName} ${this.props.creatorLastName} ein.`,
+      message: `Gib hier deine Nachricht für ${firstName} ${lastName} ein.`,
       buttons: [{ text: 'Senden', buttonType: 1 }]
     });
 
     if (buttonType !== 1 || !text) return;
 
-    chayns.intercom.sendMessageToUser(this.props.creatorId, { text });
+    chayns.intercom.sendMessageToUser(id, { text });
   }
 
   async updateDepartment() {
@@ -104,7 +105,7 @@ class ReportListItem extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          Action: 2,
+          Action: 6,
           DepartmentId: did,
           Message: text
         })
@@ -116,16 +117,16 @@ class ReportListItem extends React.Component {
     let body = {};
     switch (this.props.type) {
       case 1:
-      body = { revisorId: chayns.env.user.id, action: 2 };
-      break;
+        body = { revisorId: chayns.env.user.id, action: 2 };
+        break;
       case 2:
-      body = { revisorId: null, action: 4 };
-      break;
+        body = { revisorId: null, action: 4 };
+        break;
       case 3:
-      body = { action: 5, status: 3 };
-      break;
+        body = { action: 5, status: 3 };
+        break;
       default:
-      return;
+        return;
     }
 
     fetch(
@@ -169,72 +170,88 @@ class ReportListItem extends React.Component {
 
   render() {
     return (
-        <div className="accordion__item">
-          <div className={`ListItem ListItem--accordion${this.state.open ? ' ListItem--accordion--open' : ''}`} >
-            <div className="ListItem__head" onClick={this.toggleOpen} onKeyUp={() => undefined}>
-            <div className="ListItem__Arrow chayns__color--80"><i className="fa" /></div>
-              <div className="ListItem__Image" style={{ backgroundImage: `url(https://sub60.tobit.com/l/${this.props.locationId})` }} />
-              <div className="ListItem__Title">
-                <p className="ListItem__Title--headline">{this.props.description}</p>
-                <p className="ListItem__Title--description">{this.props.destinationName} | {this.props.creatorFirstName}</p>
-              </div>
-              <div className={`ListItem__Icon badge ${this.props.emergency ? 'emergency' : ''}`}>
-                {ReportListItem.formatTime(this.props.creationTime)}
-              </div>
+        <div className={`accordion__item ListItem ListItem--accordion${this.props.open ? ' ListItem--accordion--open' : ''}${this.props.fixed ? ' ListItem--accordion--fixed' : ''}`} >
+          <div className="ListItem__head" onClick={this.props.toggleOpen} onKeyUp={() => undefined}>
+          <div className="ListItem__Arrow chayns__color--80"><i className="fa" /></div>
+            <div className="ListItem__Image" style={{ backgroundImage: `url(https://sub60.tobit.com/l/${this.props.locationId})` }} />
+            <div className="ListItem__Title">
+              <p className="ListItem__Title--headline">{this.props.description}</p>
+              <p className="ListItem__Title--description">{this.props.destinationName} | {this.props.creatorFirstName}</p>
             </div>
-            <div className="ListItem__body">
-              <div className="ListItem__content">
+            <div className={`ListItem__Icon badge ${this.props.emergency ? 'emergency' : ''}`}>
+              {ReportListItem.formatTime(this.props.creationTime)}
+            </div>
+          </div>
+          <div className="ListItem__body">
+            <div className="ListItem__content">
+              {this.props.type !== 3 ?
                 <div style={{ display: 'flex', margin: '4px 0' }}>
                   <div>Ersteller</div>
                   <div style={{ marginLeft: 'auto' }}>
-                    {this.props.type !== 3 ? <a href="#" onClick={this.sendMessage}><i className="fa fa-comments" /> {this.props.creatorFirstName} {this.props.creatorLastName}</a> : `${this.props.creatorFirstName} ${this.props.creatorLastName}`}
+                    {this.props.type !== 3 ?
+                      <a href="#" onClick={() => this.sendMessage(true)}>
+                        <i className="fa fa-comments" />
+                        {} {this.props.creatorFirstName} {this.props.creatorLastName}
+                      </a> : `${this.props.creatorFirstName} ${this.props.creatorLastName}`
+                    }
                   </div>
                 </div>
-                {this.props.type > 1 && this.props.revisorId > 0 && this.props.revisorFirstName && this.props.revisorLastName ?
-                  <div style={{ display: 'flex', margin: '4px 0' }}>
-                    <div>Bearbeiter</div>
-                    <div style={{ marginLeft: 'auto' }}>
-                      {this.props.type !== 2 ? <a href="#"><i className="fa fa-comments" /> {this.props.revisorFirstName} {this.props.revisorLastName}</a> : `${this.props.revisorFirstName} ${this.props.revisorLastName}`}
-                    </div>
-                  </div>
-                  : null
-                }
+                : null
+              }
+              {this.props.type > 2 ?
                 <div style={{ display: 'flex', margin: '4px 0' }}>
-                  <div>Abteilung</div>
+                  <div>Bearbeiter</div>
                   <div style={{ marginLeft: 'auto' }}>
-                    {[1, 2].includes(this.props.type) ? <Button chooseButton onClick={this.updateDepartment}>{this.props.departmentName}</Button> : this.props.departmentName}
+                    {this.props.revisorFirstName && this.props.revisorLastName ?
+                      <a href="#" onClick={() => this.sendMessage(false)}>
+                        <i className="fa fa-comments" />
+                        {} {this.props.revisorFirstName} {this.props.revisorLastName}
+                      </a>
+                      : 'offen'
+                    }
                   </div>
                 </div>
-                <div style={{ padding: '8px 0 12px' }}>
-                  <img src={this.props.imageUrl} style={{ width: '100%' }} alt="" onClick={() => chayns.openImage(this.props.imageUrl)} onKeyUp={() => undefined}/>
-                  {this.props.details ? <div style={{ padding: '0 8px' }}>{this.props.details}</div> : null}
+                : null
+              }
+              <div style={{ display: 'flex', margin: '4px 0' }}>
+                <div>Abteilung</div>
+                <div style={{ marginLeft: 'auto' }}>
+                  {[1, 2, 3].includes(this.props.type) ? <Button chooseButton onClick={this.updateDepartment}>{this.props.departmentName}</Button> : this.props.departmentName}
                 </div>
               </div>
-              <Accordion head="Verlauf" isWrapped badge={this.props.history.length}>
-                <div className="accordion__content">
-                  {this.props.history && this.props.history.map(({ id, creationTime, message, userId, userName }) => (
-                    <div className="historyItem" key={id} >
-                      <div>{ReportListItem.formatTime(creationTime)}</div>
-                      <div>{message ? chayns.utils.replacePlaceholder(message, [{ key: 'user', value: userName }]) : null}</div>
-                    </div>
-                  ))}
-                </div>
-              </Accordion>
-              <div className="ListItem__content">
-                <div style={{ textAlign: 'center' }}>
-                  {[1, 2, 3].includes(this.props.type) ?
-                    <Button onClick={this.changeReport}>
+              <div style={{ padding: '8px 0 12px' }}>
+                <img src={this.props.imageUrl} style={{ width: '100%' }} alt="" onClick={() => chayns.openImage(this.props.imageUrl)} onKeyUp={() => undefined}/>
+                {this.props.details ? <div style={{ padding: '0 8px' }}>{this.props.details}</div> : null}
+              </div>
+            </div>
+            <Accordion head="Verlauf" isWrapped badge={this.props.history.length}>
+              <div className="accordion__content">
+                {this.props.history && this.props.history.map(({
+                  id,
+                  creationTime,
+                  message
+                }) => (
+                  <div className="historyItem" key={id} >
+                    <div>{ReportListItem.formatTime(creationTime)}</div>
+                    <div>{message}</div>
+                  </div>
+                ))}
+              </div>
+            </Accordion>
+            <div className="ListItem__content">
+              <div style={{ textAlign: 'center' }}>
+                {[1, 2, 3].includes(this.props.type) ?
+                  <Button onClick={this.changeReport}>
+                    {
                       {
-                        {
-                          1: 'Übernehmen',
-                          2: 'Abgeben',
-                          3: 'Stornieren',
-                        }[this.props.type]
-                      }
-                    </Button> : null
-                  }
-                  {[1, 2].includes(this.props.type) ? <Button style={{ marginLeft: '8px' }} onClick={this.closeReport}>Abschließen</Button> : null}
-                </div>
+                        1: 'Übernehmen',
+                        2: 'Abgeben',
+                        3: 'Stornieren',
+                      }[this.props.type]
+                    }
+                  </Button> : null
+                }
+                {[1, 2].includes(this.props.type) ? <Button style={{ marginLeft: '8px' }} onClick={this.closeReport}>Abschließen</Button> : null}
               </div>
             </div>
           </div>

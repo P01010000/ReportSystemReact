@@ -1,5 +1,6 @@
 .ListItem {
   width: 100%;
+  padding: 0;
   .ListItem__head {
       padding: 0 9px;
       display: flex;
@@ -40,6 +41,10 @@
               margin: 0;
               font-size: 85%;
               opacity: .75;
+              display: flex;
+              &>* {
+                flex-basis: 50%;
+              }
           }
       }
       .ListItem__Icon {
@@ -47,6 +52,13 @@
         &.emergency {
           background-color: #D43D32;
           color: #fff;
+        }
+        i {
+          opacity: 0.75;
+          cursor: pointer;
+          &:hover {
+            opacity: 1;
+          }
         }
       }
   }
@@ -57,7 +69,9 @@
       }
   }
   &.ListItem--accordion {
-      cursor: pointer;
+      .ListItem__head {
+        cursor: pointer;
+      }
       &:hover {
           background-color: #ffffff;
       }
@@ -85,6 +99,16 @@
               }
           }
       }
+      &.ListItem--accordion--fixed {
+        .ListItem__head {
+          cursor: default;
+          .ListItem__Arrow {
+            i {
+              display: none;
+            }
+          }
+        }
+      }
   }
 }
 .color--1 {
@@ -110,11 +134,6 @@
               background-color: #161616;
           }
       }
-  }
-}
-.accordion {
-  .accordion__item {
-      padding: 0;
   }
 }
 .historyItem {

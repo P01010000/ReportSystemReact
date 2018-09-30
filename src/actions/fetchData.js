@@ -1,5 +1,3 @@
-import { fromJS } from 'immutable';
-
 export const SAVE_YOUR_REPORTS = 'SAVE_YOUR_REPORTS';
 export const saveYourReports = data => ({
     type: SAVE_YOUR_REPORTS,
@@ -22,129 +20,138 @@ export const saveReportsInProgress = data => ({
 });
 
 
+export const loadOpenReports = () => async (dispatch) => {
+  const result = await fetch(
+    'https://localhost:5001/api/report?type=open',
+    {
+      headers:
+      {
+        Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  if (!result.ok) return;
+  const data = await result.json();
+
+  dispatch(saveOpenReports(data));
+};
+
+export const loadYourTasks = () => async (dispatch) => {
+  const result = await fetch(
+    'https://localhost:5001/api/report?type=yourTasks',
+    {
+      headers:
+      {
+        Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  if (!result.ok) return;
+  const data = await result.json();
+
+  dispatch(saveYourTasks(data));
+};
+
+export const loadYourReports = () => async (dispatch) => {
+  const result = await fetch(
+    'https://localhost:5001/api/report?type=yourReports',
+    {
+      headers:
+      {
+        Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  if (!result.ok) return;
+  const data = await result.json();
+
+  dispatch(saveYourReports(data));
+};
+
+export const loadReportsInProgress = () => async (dispatch) => {
+  const result = await fetch(
+    'https://localhost:5001/api/report?type=reportsInProgress',
+    {
+      headers:
+      {
+        Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  if (!result.ok) return;
+  const data = await result.json();
+
+  dispatch(saveReportsInProgress(data));
+};
+
+
 /**
  * Example for an async actions, requires redux thunk middleware
  * //redux.js.org/docs/advanced/AsyncActions
  */
 export const loadData = () => async (dispatch) => {
-    let result = await fetch(
-        'https://localhost:5001/api/report?type=open',
-        {
-            headers:
-            {
-                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-                'Content-Type': 'application/json'
-            }
-        }
-    );
-    if (!result.ok) return;
-    let data = await result.json();
-
-    dispatch(saveOpenReports(data));
-
-    result = await fetch(
-        'https://localhost:5001/api/report?type=yourTasks',
-        {
-            headers:
-            {
-                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-                'Content-Type': 'application/json'
-            }
-        }
-    );
-    if (!result.ok) return;
-    data = await result.json();
-
-    dispatch(saveYourTasks(data));
-
-    result = await fetch(
-        'https://localhost:5001/api/report?type=yourReports',
-        {
-            headers:
-            {
-                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-                'Content-Type': 'application/json'
-            }
-        }
-    );
-    if (!result.ok) return;
-    data = await result.json();
-
-    dispatch(saveYourReports(data));
-
-    result = await fetch(
-        'https://localhost:5001/api/report?type=other',
-        {
-            headers:
-            {
-                Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-                'Content-Type': 'application/json'
-            }
-        }
-    );
-    if (!result.ok) return;
-    data = await result.json();
-
-    dispatch(saveReportsInProgress(data));
-
-    return;
+  dispatch(loadOpenReports());
+  dispatch(loadYourTasks());
+  dispatch(loadYourReports());
+  dispatch(loadReportsInProgress());
 
     const yourReports = [
         {
             id: 1,
             creatorId: 4,
-            creatorName: 'Max Muster',
+            creatorFirstName: 'Max',
+            creatorLastName: 'Muster',
             creationTime: new Date('2018-09-25 09:15'),
             revisorId: 5,
-            revisorName: 'Susi Strolch',
+            revisorFirstName: 'Susi',
+            revisorLastName: 'Strolch',
+            destinationId: 5,
+            destinationName: 'Tobit Software',
             locationId: 1214,
-            locationName: 'Tobit Software',
             description: 'Kaffeemaschine defekt',
             details: 'Kaffeemaschine in der Lounge leckt',
-            image: 'https://i.ebayimg.com/images/g/JAAAAOxy~iJQ9dPi/s-l640.jpg',
-            group: 'Junior Team',
+            imageUrl: 'https://i.ebayimg.com/images/g/JAAAAOxy~iJQ9dPi/s-l640.jpg',
+            departmentName: 'Junior Team',
             emergency: true,
             history: [
                 {
                     id: 3,
-                    date: new Date('2018-09-26 09:01'),
-                    userId: 5,
-                    userName: 'Susi Strolch',
-                    message: '##user## kümmert sich ab jetzt um dieses Problem.'
+                    creationTime: new Date('2018-09-26 09:01'),
+                    message: 'Susi Strolch kümmert sich ab jetzt um dieses Problem.'
                 },
                 {
                     id: 2,
-                    date: new Date('2018-09-26 08:14'),
-                    userId: 5,
-                    userName: 'Susi Strolch',
-                    message: '##user## hat diesen Bericht von Labs nach Junior Team verschoben.'
+                    creationTime: new Date('2018-09-26 08:14'),
+                    message: 'Susi Strolch hat diesen Bericht von Labs nach Junior Team verschoben.'
                 },
                 {
                     id: 1,
-                    date: new Date('2018-09-26 08:10'),
-                    userId: 4,
-                    userName: 'Max Muster',
-                    message: '##user## hat diesen Bericht erstellt.'
+                    creationTime: new Date('2018-09-26 08:10'),
+                    message: 'Max Muster hat diesen Bericht erstellt.'
                 }
             ]
         },
         {
             id: 2,
             creatorId: 5,
-            creatorName: 'Susi Strolch',
+            creatorFirstName: 'Susi',
+            creatorLastName: 'Strolch',
             creationTime: new Date('2018-09-24 18:10'),
+            destinationId: 2,
+            destinationName: 'Bamboo',
             locationId: 1,
-            locationName: 'Bamboo',
+            departmentName: 'Labs',
             description: 'Tür verschlossen',
-            image: 'https://st.depositphotos.com/1704023/5157/i/950/depositphotos_51577131-stock-photo-double-green-closed-door-detail.jpg',
-            group: 'Labs',
+            imageUrl: 'https://st.depositphotos.com/1704023/5157/i/950/depositphotos_51577131-stock-photo-double-green-closed-door-detail.jpg',
             history: [
                 {
                     id: 11,
-                    date: new Date('2018-09-24 18:10'),
-                    userId: 5,
-                    userName: 'Susi Strolch',
-                    message: '##user## hat diesen Bericht erstellt'
+                    creationTime: new Date('2018-09-24 18:10'),
+                    message: 'Susi Strolch hat diesen Bericht erstellt'
                 }
             ]
         }

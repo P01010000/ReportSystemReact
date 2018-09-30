@@ -1,0 +1,37 @@
+[contentEditable] {
+	--rgb: 232, 232, 232;
+	border: 1px dashed;
+	border-color: rgba(var(--rgb), 0.75);
+	padding: 0 5px;
+	&:hover{
+		border-color: rgba(var(--rgb), 1)
+	}
+}
+
+.department__settings {
+	.accordion__item {
+		label {
+			display: inline;
+		}
+		div {
+			display: inline-flex;
+			width: calc(100% - 20px);
+			&>* {
+				flex: 1 0 50%;
+			}
+		}
+	}
+}
+
+.destination__settings {
+	display: flex;
+	:first-child {
+		flex: 0 0 40px;
+		height: 40px;
+		margin-right: 10px;
+		background-size: contain;
+	}
+	:last-child {
+		margin-left: auto;
+	}
+}

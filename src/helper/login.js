@@ -10,7 +10,7 @@ export const Login = () => new Promise((resolve, reject) => {
         // replace the callback with an empty one
         chayns.setAccessTokenChange(false, () => null);
         triggerCallbacks();
-        if (chayns.env.user.isAuthenticated) resolve(); else reject('Nicht angemeldet');
+        if (chayns.env.user.isAuthenticated) resolve(); else reject(new Error('Nicht angemeldet'));
       });
       chayns.login();
     }
