@@ -63,18 +63,12 @@ async function init() {
     // dispatch async example action
     store.dispatch(loadBoardSettings());
     store.dispatch(loadData());
-    if (chayns.env.parameters.openReport) {
-      store.dispatch(toggleAccordion({ accordion: 'openReports' }));
-      store.dispatch(toggleReport({ accordion: 'openReports', reportId: Number.parseInt(chayns.env.parameters.openReport, 10) }));
-    } else if (chayns.env.parameters.yourTask) {
-      store.dispatch(toggleAccordion({ accordion: 'yourTasks' }));
-      store.dispatch(toggleReport({ accordion: 'yourTasks', reportId: Number.parseInt(chayns.env.parameters.yourTask, 10) }));
-    } else if (chayns.env.parameters.yourReport) {
-      store.dispatch(toggleAccordion({ accordion: 'yourReports' }));
-      store.dispatch(toggleReport({ accordion: 'yourReports', reportId: Number.parseInt(chayns.env.parameters.yourReport, 10) }));
-    } else if (chayns.env.parameters.reportInProgress) {
-      store.dispatch(toggleAccordion({ accordion: 'reportsInProgress' }));
-      store.dispatch(toggleReport({ accordion: 'reportsInProgress', reportId: Number.parseInt(chayns.env.parameters.reportInProgress, 10) }));
+    if (chayns.env.parameters.show) {
+      store.dispatch(toggleAccordion({ accordion: chayns.env.parameters.show }));
+      store.dispatch(toggleReport({
+        accordion: chayns.env.parameters.show,
+        reportId: Number.parseInt(chayns.env.parameters.id, 10)
+      }));
     }
 }
 

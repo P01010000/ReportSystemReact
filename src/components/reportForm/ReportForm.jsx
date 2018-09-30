@@ -102,7 +102,7 @@ class ReportForm extends React.Component {
       const id = response.json();
       chayns.dialog.alert('Dein Report wurde abgeschickt');
       this.props.clearForm();
-      chayns.selectTapp({ id: chayns.env.site.tapp.id }, `yourReport=${id}`);
+      chayns.selectTapp({ id: chayns.env.site.tapp.id }, `show=yourReports&id=${id}`);
     } catch (ex) {
       chayns.dialog.alert(response ? response.statusText : ex.message);
     }
