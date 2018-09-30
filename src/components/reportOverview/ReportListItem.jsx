@@ -19,7 +19,7 @@ class ReportListItem extends React.Component {
     id: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     details: PropTypes.string,
-    creationTime: PropTypes.instanceOf(Date).isRequired,
+    creationTime: PropTypes.string.isRequired,
     destinationName: PropTypes.string.isRequired,
     departments: PropTypes.instanceOf(Array).isRequired,
     locationId: PropTypes.number.isRequired,
@@ -31,8 +31,8 @@ class ReportListItem extends React.Component {
     revisorId: PropTypes.number,
     revisorFirstName: PropTypes.string,
     revisorLastName: PropTypes.string,
+    departmentId: PropTypes.number.isRequired,
     departmentName: PropTypes.string.isRequired,
-    uacGroup: PropTypes.number.isRequired,
     history: PropTypes.instanceOf(Array),
     open: PropTypes.bool,
     fixed: PropTypes.bool,
@@ -87,7 +87,7 @@ class ReportListItem extends React.Component {
     }
     const did = data.selection[0].value.id;
 
-    if (did === this.props.uacGroup) return;
+    if (did === this.props.departmentId) return;
 
     const { buttonType, text } = await chayns.dialog.input({
       title: 'Kommentar',
