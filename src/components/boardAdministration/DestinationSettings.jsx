@@ -10,9 +10,10 @@ const DestinationSettings = ({
   name,
   latitude,
   longitude,
-  updateDestination
+  updateDestination,
+  add
 }) => (
-  <div className="accordion__item ListItem" key={id}>
+  <div className="accordion__item ListItem">
     <div className="ListItem__head">
       <div className="ListItem__Image" style={{ backgroundImage: `url(https://sub60.tobit.com/l/${locationId})` }} />
       <div className="ListItem__Title">
@@ -34,7 +35,7 @@ const DestinationSettings = ({
         </div>
       </div>
       <div className="ListItem__Icon" style={{ lineHeight: '40px', paddingLeft: '10px' }}>
-        <i className="fa fa-lg fa-close" />
+        <i className={`fa fa-lg ${add ? 'fa-plus' : 'fa-close'}`} />
       </div>
     </div>
   </div>
@@ -46,13 +47,15 @@ DestinationSettings.propTypes = {
   name: PropTypes.string.isRequired,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
-  updateDestination: PropTypes.func.isRequired
+  updateDestination: PropTypes.func.isRequired,
+  add: PropTypes.bool
 };
 
 DestinationSettings.defaultProps = {
   locationId: undefined,
   latitude: undefined,
-  longitude: undefined
+  longitude: undefined,
+  add: false
 };
 
 const mapDispatchToProps = dispatch => ({

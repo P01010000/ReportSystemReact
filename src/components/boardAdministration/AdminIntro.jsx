@@ -17,12 +17,10 @@ const AdminIntro = ({
         onBlur={({ target: { innerText: value } }) => title !== value && updateTitle(value)}
       />
     </h1>
-    <p>
-      <ContentEditable
-        html={introduction}
-        onBlur={({ target: { innerText: value } }) => introduction !== value && updateIntroducton(value)}
-      />
-    </p>
+    <ContentEditable
+      html={introduction}
+      onBlur={({ target: { innerText: value } }) => introduction !== value && updateIntroducton(value)}
+    />
   </div>
 );
 

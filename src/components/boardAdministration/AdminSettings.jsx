@@ -12,8 +12,7 @@ class AdminSettings extends React.Component {
     title: PropTypes.string,
     introduction: PropTypes.string,
     departments: PropTypes.instanceOf(Array).isRequired,
-    destinations: PropTypes.instanceOf(Array).isRequired,
-    updateDestination: PropTypes.func.isRequired
+    destinations: PropTypes.instanceOf(Array).isRequired
   }
 
   static defaultProps = {
@@ -74,25 +73,15 @@ class AdminSettings extends React.Component {
           ))}
         </Accordion>
         <Accordion head="Orte" dataGroup="admin">
-          {this.props.destinations.map(d => <DestinationSettings {...d}/>)}
+          {this.props.destinations.map(d => <DestinationSettings key={d.id} {...d}/>)}
           <DestinationSettings
-            id={undefined}
+            id={-1}
             name="Neuer Ort"
             locationId={chayns.env.site.locationId}
             latitude={this.state.latitude}
             longitude={this.state.longitude}
+            add
           />
-          <div style={{ textAlign: 'center', margin: '15px 0' }} >
-            <Button onClick={() => this.props.updateDestination({
-              id: 5,
-              locationId: chayns.env.site.locationId,
-              name: 'Neuer Ort',
-              latitude: -1,
-              longitude: -1
-              })}
-            >Hinzufügen
-            </Button>
-          </div>
         </Accordion>
       </React.Fragment>
     );
