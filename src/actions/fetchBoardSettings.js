@@ -1,3 +1,4 @@
+import SERVER_URL from '../constants/server-url';
 import { nearestDestination } from '../helper/haversine';
 import { updateReportForm } from './updateReportForm';
 
@@ -9,7 +10,7 @@ export const saveBoardSettings = data => ({
 
 export const loadBoardSettings = () => async (dispatch) => {
   const res = await fetch(
-   `https://localhost:5001/api/boardSettings/${chayns.env.site.locationId}/${chayns.env.site.tapp.id}`,
+   `${SERVER_URL}api/boardSettings/${chayns.env.site.locationId}/${chayns.env.site.tapp.id}`,
    { headers: { 'Content-Type': 'application/json' } }
   );
   if (!res.ok) return; // error

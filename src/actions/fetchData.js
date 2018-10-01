@@ -1,3 +1,5 @@
+import SERVER_URL from '../constants/server-url';
+
 export const SAVE_YOUR_REPORTS = 'SAVE_YOUR_REPORTS';
 export const saveYourReports = data => ({
     type: SAVE_YOUR_REPORTS,
@@ -22,7 +24,7 @@ export const saveReportsInProgress = data => ({
 
 export const loadOpenReports = () => async (dispatch) => {
   const result = await fetch(
-    'https://localhost:5001/api/report?type=openReports',
+    `${SERVER_URL}/api/report?type=openReports`,
     {
       headers:
       {
@@ -40,7 +42,7 @@ export const loadOpenReports = () => async (dispatch) => {
 
 export const loadYourTasks = () => async (dispatch) => {
   const result = await fetch(
-    'https://localhost:5001/api/report?type=yourTasks',
+    `${SERVER_URL}/api/report?type=yourTasks`,
     {
       headers:
       {
@@ -58,7 +60,7 @@ export const loadYourTasks = () => async (dispatch) => {
 
 export const loadYourReports = () => async (dispatch) => {
   const result = await fetch(
-    'https://localhost:5001/api/report?type=yourReports',
+    `${SERVER_URL}api/report?type=yourReports`,
     {
       headers:
       {
@@ -76,7 +78,7 @@ export const loadYourReports = () => async (dispatch) => {
 
 export const loadReportsInProgress = () => async (dispatch) => {
   const result = await fetch(
-    'https://localhost:5001/api/report?type=reportsInProgress',
+    `${SERVER_URL}api/report?type=reportsInProgress`,
     {
       headers:
       {
