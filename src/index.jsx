@@ -22,9 +22,11 @@ import { toggleAccordion, toggleReport } from './actions/accordionControl';
  * @return {Promise.<void>}
  */
 async function init() {
+    // eslint-disable-next-line no-console
     console.debug('ServerUrl for current environment:', SERVER_URL);
 
     if (__DEV__ || __STAGING__) {
+        // eslint-disable-next-line global-require
         const installDevTools = require('immutable-devtools');
         installDevTools(immutable);
     }
@@ -32,6 +34,7 @@ async function init() {
     const storeMiddleware = [thunk];
 
     if (__DEV__ || __STAGING__) {
+        // eslint-disable-next-line global-require
         storeMiddleware.push(require('redux-logger').default);
     }
 

@@ -60,7 +60,7 @@ export const loadYourTasks = () => async (dispatch) => {
 
 export const loadYourReports = () => async (dispatch) => {
   const result = await fetch(
-    `${SERVER_URL}api/report?type=yourReports`,
+    `${SERVER_URL}/api/report?type=yourReports`,
     {
       headers:
       {
@@ -78,7 +78,7 @@ export const loadYourReports = () => async (dispatch) => {
 
 export const loadReportsInProgress = () => async (dispatch) => {
   const result = await fetch(
-    `${SERVER_URL}api/report?type=reportsInProgress`,
+    `${SERVER_URL}/api/report?type=reportsInProgress`,
     {
       headers:
       {
@@ -94,80 +94,9 @@ export const loadReportsInProgress = () => async (dispatch) => {
   dispatch(saveReportsInProgress(data));
 };
 
-
-/**
- * Example for an async actions, requires redux thunk middleware
- * //redux.js.org/docs/advanced/AsyncActions
- */
 export const loadData = () => async (dispatch) => {
   dispatch(loadOpenReports());
   dispatch(loadYourTasks());
   dispatch(loadYourReports());
   dispatch(loadReportsInProgress());
-/*
-    const yourReports = [
-        {
-            id: 1,
-            creatorId: 4,
-            creatorFirstName: 'Max',
-            creatorLastName: 'Muster',
-            creationTime: '2018-09-25 09:15',
-            revisorId: 5,
-            revisorFirstName: 'Susi',
-            revisorLastName: 'Strolch',
-            destinationName: 'Tobit Software',
-            locationId: 1214,
-            description: 'Kaffeemaschine defekt',
-            details: 'Kaffeemaschine in der Lounge leckt',
-            imageUrl: 'https://i.ebayimg.com/images/g/JAAAAOxy~iJQ9dPi/s-l640.jpg',
-            departmentId: 5,
-            departmentName: 'Junior Team',
-            emergency: true,
-            history: [
-                {
-                    id: 3,
-                    creationTime: new Date('2018-09-26 09:01'),
-                    message: 'Susi Strolch kümmert sich ab jetzt um dieses Problem.'
-                },
-                {
-                    id: 2,
-                    creationTime: new Date('2018-09-26 08:14'),
-                    message: 'Susi Strolch hat diesen Bericht von Labs nach Junior Team verschoben.'
-                },
-                {
-                    id: 1,
-                    creationTime: new Date('2018-09-26 08:10'),
-                    message: 'Max Muster hat diesen Bericht erstellt.'
-                }
-            ]
-        },
-        {
-            id: 2,
-            creatorId: 5,
-            creatorFirstName: 'Susi',
-            creatorLastName: 'Strolch',
-            creationTime: '2018-09-24 18:10',
-            destinationName: 'Bamboo',
-            locationId: 1,
-            departmentId: 2,
-            departmentName: 'Labs',
-            description: 'Tür verschlossen',
-            imageUrl: 'https://st.depositphotos.com/1704023/5157/i/950/depositphotos_51577131-stock-photo-double-green-closed-door-detail.jpg',
-            history: [
-                {
-                    id: 11,
-                    creationTime: new Date('2018-09-24 18:10'),
-                    message: 'Susi Strolch hat diesen Bericht erstellt'
-                }
-            ]
-        }
-    ];
-
-    if (!chayns.env.user.isAuthenticated) return;
-
-    dispatch(saveYourReports([yourReports[1]]));
-    dispatch(saveOpenReports(yourReports));
-    dispatch(saveYourTasks([yourReports[0]]));
-    dispatch(saveReportsInProgress(yourReports));
-*/
 };

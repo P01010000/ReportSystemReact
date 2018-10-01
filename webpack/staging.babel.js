@@ -5,12 +5,14 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import common from './common';
 
 const ROOT_PATH = path.resolve('./');
-const serverroot = '//tappqa/training/2018/hn/ReportSystemReact/qa';
 
 export default merge(
-    common(serverroot),
+    common,
     {
         mode: 'production',
+        output: {
+            path: '//tappqa/training/2018/hn/ReportSystemReact/qa'
+        },
         devtool: 'inline-source-map',
         plugins: [
             new HtmlWebpackPlugin({

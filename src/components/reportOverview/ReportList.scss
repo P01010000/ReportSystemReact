@@ -7,7 +7,7 @@
       align-items: center;
       height: 64px;
       .ListItem__Arrow {
-          flex: 0 20px;
+          flex: 0 0 20px;
           opacity: .6;
           i {
               transition: transform 300ms, -webkit-transform 300ms;
@@ -18,7 +18,7 @@
           }
       }
       .ListItem__Image {
-          flex: 0 40px;
+          flex: 0 0 40px;
           height: 40px;
           width: 40px;
           margin-right: 10px;
@@ -31,6 +31,7 @@
       }
       .ListItem__Title {
           flex: 1 0;
+          overflow: hidden;
           .ListItem__Title--headline {
               margin: 0;
               text-overflow: ellipsis;
@@ -48,7 +49,7 @@
           }
       }
       .ListItem__Icon {
-        flex: 0 1 auto;
+        flex: 0 0 auto;
         &.emergency {
           background-color: #D43D32;
           color: #fff;

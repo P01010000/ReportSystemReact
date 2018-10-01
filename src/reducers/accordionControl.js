@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
     case CLOSE_ACCORDION:
       return Object.assign({}, ...Object.keys(state).map(k => ({ [k]: { ...state[k], open: k === action.data.accordion ? false : state[k].open } })));
     case TOGGLE_REPORT:
+      // eslint-disable-next-line no-nested-ternary
       return Object.assign({}, ...Object.keys(state).map(k => ({ [k]: { ...state[k], openReportId: k === action.data.accordion ? (state[k].openReportId === action.data.reportId ? undefined : action.data.reportId) : state[k].openReportId } })));
     default:
       return state;

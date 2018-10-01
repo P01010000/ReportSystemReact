@@ -5,12 +5,14 @@ import merge from 'webpack-merge';
 import common from './common';
 
 const ROOT_PATH = path.resolve('./');
-const serverroot = '//tappqa/training/2018/hn/ReportSystemReact/prod';
 
 export default merge(
-    common(serverroot),
+    common,
     {
         mode: 'production',
+        output: {
+            path: '//tappqa/training/2018/hn/ReportSystemReact/prod'
+        },
         devtool: 'hidden-source-map',
         plugins: [
             new HtmlWebpackPlugin({

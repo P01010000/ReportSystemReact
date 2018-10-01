@@ -4,7 +4,7 @@ import postcssFlexbugsFixes from 'postcss-flexbugs-fixes';
 
 const ROOT_PATH = path.resolve('./');
 
-export default serverroot => ({
+export default {
     entry: {
         template: path.resolve(ROOT_PATH, 'src/index.jsx')
     },
@@ -12,7 +12,7 @@ export default serverroot => ({
         extensions: ['.js', '.jsx']
     },
     output: {
-        path: serverroot,
+        path: path.resolve(ROOT_PATH, 'build'),
         filename: '[name].bundle.js?[hash]',
         chunkFilename: '[name].chunk.js',
     },
@@ -70,4 +70,4 @@ export default serverroot => ({
             }
         ]
     },
-});
+};

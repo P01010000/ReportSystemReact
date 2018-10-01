@@ -25,7 +25,7 @@ class AdminSettings extends React.Component {
     this.state = { groups: [], latitude: -1, longitude: -1 };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     chayns.showWaitCursor();
     // replace with fetch against my own backend api and return the preprocessed uacGroupList
     const res = await fetch(
