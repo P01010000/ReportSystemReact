@@ -5,9 +5,10 @@ import merge from 'webpack-merge';
 import common from './common';
 
 const ROOT_PATH = path.resolve('./');
+const serverroot = '//tappqa/training/2018/hn/ReportSystemReact/prod';
 
 export default merge(
-    common,
+    common(serverroot),
     {
         mode: 'production',
         devtool: 'hidden-source-map',

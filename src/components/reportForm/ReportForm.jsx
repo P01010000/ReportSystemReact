@@ -8,7 +8,7 @@ import { Login } from '../../helper/login';
 import { updateReportForm, clearReportForm } from '../../actions/updateReportForm';
 import { toggleAccordion as toggleAccordionAction, closeAccordion as closeAccordionAction } from '../../actions/accordionControl';
 import './ReportForm.scss';
-
+import SERVER_URL from '../../constants/server-url';
 
 class ReportForm extends React.Component {
   static propTypes = {
@@ -79,7 +79,7 @@ class ReportForm extends React.Component {
       await Login();
 
       response = await fetch(
-        'https://localhost:5001/api/report',
+        `${SERVER_URL}/api/report`,
         {
           method: 'POST',
           headers:

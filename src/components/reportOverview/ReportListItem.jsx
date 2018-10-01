@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Accordion, Button } from 'chayns-components';
 import formatTime from '../../helper/formatTime';
 import ReportHistoryItem from './ReportHistoryItem';
+import SERVER_URL from '../../constants/server-url';
 
 class ReportListItem extends React.Component {
   static propTypes = {
@@ -90,7 +91,7 @@ class ReportListItem extends React.Component {
 
     if (buttonType !== 1) return;
     fetch(
-      `https://localhost:5001/api/report/${this.props.id}`,
+      `${SERVER_URL}api/report/${this.props.id}`,
       {
         method: 'PUT',
         headers: {
@@ -124,7 +125,7 @@ class ReportListItem extends React.Component {
     }
 
     fetch(
-      `https://localhost:5001/api/report/${this.props.id}`,
+      `${SERVER_URL}/api/report/${this.props.id}`,
       {
         method: 'PUT',
         headers: {
@@ -147,7 +148,7 @@ class ReportListItem extends React.Component {
     if (buttonType !== 1) return;
 
     fetch(
-      `https://localhost:5001/api/report/${this.props.id}`,
+      `${SERVER_URL}/api/report/${this.props.id}`,
       {
         method: 'PUT',
         headers: {

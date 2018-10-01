@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ContentEditable from 'react-contenteditable';
-import { Accordion, Button } from 'chayns-components';
+import { Accordion } from 'chayns-components';
 import { updateBoardDepartments } from '../../actions/updateBoardSettings';
 import DestinationSettings from './DestinationSettings';
 import './AdminSettings.scss';
