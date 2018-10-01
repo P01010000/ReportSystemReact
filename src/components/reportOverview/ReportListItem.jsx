@@ -90,22 +90,28 @@ class ReportListItem extends React.Component {
     });
 
     if (buttonType !== 1) return;
-    fetch(
-      `${SERVER_URL}api/report/${this.props.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-          'Content-Type': 'application/json',
-          TappId: chayns.env.site.tapp.id
-        },
-        body: JSON.stringify({
-          Action: 6,
-          DepartmentId: did,
-          Message: text
-        })
-      }
-    );
+
+    try {
+      await fetch(
+        `${SERVER_URL}api/report/${this.props.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+            'Content-Type': 'application/json',
+            TappId: chayns.env.site.tapp.id
+          },
+          body: JSON.stringify({
+            Action: 6,
+            DepartmentId: did,
+            Message: text
+          })
+        }
+      );
+      chayns.dialog.alert('Erfolg');
+    } catch (ex) {
+      chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
+    }
   }
 
   async changeReport() {
@@ -124,18 +130,23 @@ class ReportListItem extends React.Component {
         return;
     }
 
-    fetch(
-      `${SERVER_URL}/api/report/${this.props.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-          'Content-Type': 'application/json',
-          TappId: chayns.env.site.tapp.id
-        },
-        body: JSON.stringify(body)
-      }
-    );
+    try {
+      await fetch(
+        `${SERVER_URL}/api/report/${this.props.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
+            'Content-Type': 'application/json',
+            TappId: chayns.env.site.tapp.id
+          },
+          body: JSON.stringify(body)
+        }
+      );
+      chayns.dialog.alert('Erfolg');
+    } catch (ex) {
+      chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
+    }
   }
 
   async closeReport() {
@@ -147,7 +158,8 @@ class ReportListItem extends React.Component {
 
     if (buttonType !== 1) return;
 
-    fetch(
+    try {
+      await fetch(
       `${SERVER_URL}/api/report/${this.props.id}`,
       {
         method: 'PUT',
@@ -162,7 +174,11 @@ class ReportListItem extends React.Component {
           Message: text
         })
       }
-    );
+      );
+      chayns.dialog.alert('Report wurde erfolgreich abgeschlossen');
+    } catch (ex) {
+      chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
+    }
   }
 
   render() {
