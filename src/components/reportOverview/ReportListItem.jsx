@@ -2,19 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Accordion, Button } from 'chayns-components';
+import formatTime from '../../helper/formatTime';
+import ReportHistoryItem from './ReportHistoryItem';
 
 class ReportListItem extends React.Component {
-  static formatTime = (d) => {
-    let diff = Math.round((new Date() - new Date(d)) / 1000);
-    if (diff < 60) return `Vor ${diff} Sekunde${diff !== 1 ? 'n' : ''}`;
-    diff = Math.round(diff / 60);
-    if (diff < 60) return `Vor ${diff} Minute${diff !== 1 ? 'n' : ''}`;
-    diff = Math.round(diff / 60);
-    if (diff < 24) return `Vor ${diff} Stunde${diff !== 1 ? 'n' : ''}`;
-    diff = Math.round(diff / 24);
-    return `Vor ${diff} Tag${diff !== 1 ? 'en' : ''}`;
-  }
-
   static propTypes = {
     id: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
@@ -24,6 +15,7 @@ class ReportListItem extends React.Component {
     departments: PropTypes.instanceOf(Array).isRequired,
     locationId: PropTypes.number.isRequired,
     emergency: PropTypes.bool,
+    status: PropTypes.number,
     imageUrl: PropTypes.string.isRequired,
     creatorId: PropTypes.number.isRequired,
     creatorFirstName: PropTypes.string.isRequired,
@@ -46,6 +38,7 @@ class ReportListItem extends React.Component {
     revisorLastName: null,
     details: null,
     emergency: false,
+    status: 1,
     history: [],
     open: false,
     fixed: false
@@ -102,7 +95,8 @@ class ReportListItem extends React.Component {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          TappId: chayns.env.site.tapp.id
         },
         body: JSON.stringify({
           Action: 6,
@@ -120,7 +114,7 @@ class ReportListItem extends React.Component {
         body = { revisorId: chayns.env.user.id, action: 2 };
         break;
       case 2:
-        body = { revisorId: null, action: 4 };
+        body = { revisorId: -1, action: 4 };
         break;
       case 3:
         body = { action: 5, status: 3 };
@@ -135,7 +129,8 @@ class ReportListItem extends React.Component {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          TappId: chayns.env.site.tapp.id
         },
         body: JSON.stringify(body)
       }
@@ -157,7 +152,8 @@ class ReportListItem extends React.Component {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          TappId: chayns.env.site.tapp.id
         },
         body: JSON.stringify({
           Action: 3,
@@ -178,8 +174,8 @@ class ReportListItem extends React.Component {
               <p className="ListItem__Title--headline">{this.props.description}</p>
               <p className="ListItem__Title--description">{this.props.destinationName} | {this.props.creatorFirstName}</p>
             </div>
-            <div className={`ListItem__Icon badge ${this.props.emergency ? 'emergency' : ''}`}>
-              {ReportListItem.formatTime(this.props.creationTime)}
+            <div className={`ListItem__Icon badge ${this.props.emergency ? 'emergency' : ''} ${this.props.status===2 ? 'finished' : ''}`}>
+              {formatTime(this.props.creationTime)}
             </div>
           </div>
           <div className="ListItem__body">
@@ -226,16 +222,7 @@ class ReportListItem extends React.Component {
             </div>
             <Accordion head="Verlauf" isWrapped badge={this.props.history.length}>
               <div className="accordion__content">
-                {this.props.history && this.props.history.map(({
-                  id,
-                  creationTime,
-                  message
-                }) => (
-                  <div className="historyItem" key={id} >
-                    <div>{ReportListItem.formatTime(creationTime)}</div>
-                    <div>{message}</div>
-                  </div>
-                ))}
+                {this.props.history && this.props.history.map(h => <ReportHistoryItem key={h.id} {...h} />)}
               </div>
             </Accordion>
             <div className="ListItem__content">

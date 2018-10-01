@@ -22,12 +22,13 @@ export const saveReportsInProgress = data => ({
 
 export const loadOpenReports = () => async (dispatch) => {
   const result = await fetch(
-    'https://localhost:5001/api/report?type=open',
+    'https://localhost:5001/api/report?type=openReports',
     {
       headers:
       {
         Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        TappId: chayns.env.site.tapp.id
       }
     }
   );
@@ -44,7 +45,8 @@ export const loadYourTasks = () => async (dispatch) => {
       headers:
       {
         Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        TappId: chayns.env.site.tapp.id
       }
     }
   );
@@ -61,7 +63,8 @@ export const loadYourReports = () => async (dispatch) => {
       headers:
       {
         Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        TappId: chayns.env.site.tapp.id
       }
     }
   );
@@ -78,7 +81,8 @@ export const loadReportsInProgress = () => async (dispatch) => {
       headers:
       {
         Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        TappId: chayns.env.site.tapp.id
       }
     }
   );
@@ -98,7 +102,7 @@ export const loadData = () => async (dispatch) => {
   dispatch(loadYourTasks());
   dispatch(loadYourReports());
   dispatch(loadReportsInProgress());
-
+/*
     const yourReports = [
         {
             id: 1,
@@ -163,4 +167,5 @@ export const loadData = () => async (dispatch) => {
     dispatch(saveOpenReports(yourReports));
     dispatch(saveYourTasks([yourReports[0]]));
     dispatch(saveReportsInProgress(yourReports));
+*/
 };

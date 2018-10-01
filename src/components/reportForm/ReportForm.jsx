@@ -85,7 +85,8 @@ class ReportForm extends React.Component {
           headers:
           {
             Authorization: `Bearer ${chayns.env.user.tobitAccessToken}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            TappId: chayns.env.site.tapp.id
           },
           body:
           JSON.stringify({
@@ -94,12 +95,14 @@ class ReportForm extends React.Component {
             description: this.props.description,
             details: this.props.details,
             destinationId: this.props.destinationId,
-            departmentId: this.props.departmentId
+            departmentId: this.props.departmentId,
+            uacGroup: this.props.departments.find(d => d.id === this.props.departmentId).uacGroup,
+            emergency: this.props.emergency
           })
         }
       );
 
-      const id = response.json();
+      const id = await response.json();
       chayns.dialog.alert('Dein Report wurde abgeschickt');
       this.props.clearForm();
       chayns.selectTapp({ id: chayns.env.site.tapp.id }, `show=yourReports&id=${id}`);

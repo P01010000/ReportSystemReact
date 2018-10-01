@@ -53,6 +53,9 @@
           background-color: #D43D32;
           color: #fff;
         }
+        &.finished {
+            background-color: green;
+        }
         i {
           opacity: 0.75;
           cursor: pointer;

@@ -41,7 +41,7 @@ class AdminSettings extends React.Component {
     const { latitude, longitude } = await chayns.getGeoLocation();
 
     let { data } = await res.json();
-    data = data.map(g => ({ ...g, ...(this.props.departments.find(d => d.userGroupId === g.userGroupId)) }));
+    data = data.map(g => ({ ...g, ...(this.props.departments.find(d => d.uacGroup === g.userGroupId)) }));
 
     this.setState({
       latitude,

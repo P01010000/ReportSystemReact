@@ -8,14 +8,14 @@ export const saveBoardSettings = data => ({
 });
 
 export const loadBoardSettings = () => async (dispatch) => {
-  /* const res = await fetch(
+  const res = await fetch(
    `https://localhost:5001/api/boardSettings/${chayns.env.site.locationId}/${chayns.env.site.tapp.id}`,
    { headers: { 'Content-Type': 'application/json' } }
   );
   if (!res.ok) return; // error
-  const data = await res.json(); */
+  const data = await res.json();
   // await new Promise(res => setTimeout(() => res(), 1000));
-  const data = {
+  /* const data = {
     title: 'Report System Develop',
     introduction: 'Hier wirst du neue Störfälle melden oder Reports verwalten können.',
     departments: [
@@ -82,7 +82,7 @@ export const loadBoardSettings = () => async (dispatch) => {
       longitude: 7.0565
     }
     ]
-  };
+  }; */
 
   dispatch(saveBoardSettings(data));
 
