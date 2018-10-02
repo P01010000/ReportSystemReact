@@ -56,7 +56,7 @@ class ReportListItem extends React.Component {
   async sendMessage(creator = true) {
     const id = creator ? this.props.creatorId : this.props.revisorId;
     const firstName = creator ? this.props.creatorFirstName : this.props.revisorFirstName;
-    const lastName = creator ? this.props.creatorFirstName : this.props.revisorLastName;
+    const lastName = creator ? this.props.creatorLastName : this.props.revisorLastName;
     const { buttonType, text } = await chayns.dialog.input({
       title: 'Nachricht schicken',
       message: `Gib hier deine Nachricht für ${firstName} ${lastName} ein.`,
