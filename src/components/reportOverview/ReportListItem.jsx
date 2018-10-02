@@ -109,6 +109,7 @@ class ReportListItem extends React.Component {
         }
       );
       chayns.dialog.alert('Erfolg');
+      chayns.selectTapp({ id: chayns.env.site.tapp.id });
     } catch (ex) {
       chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
     }
@@ -144,6 +145,7 @@ class ReportListItem extends React.Component {
         }
       );
       chayns.dialog.alert('Erfolg');
+      chayns.selectTapp({ id: chayns.env.site.tapp.id }, `show=${['yourTasks', 'openReports', 'yourReports'][this.props.type]}&id=${this.props.id}`);
     } catch (ex) {
       chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
     }
@@ -176,6 +178,7 @@ class ReportListItem extends React.Component {
       }
       );
       chayns.dialog.alert('Report wurde erfolgreich abgeschlossen');
+      chayns.selectTapp({ id: chayns.env.site.tapp.id });
     } catch (ex) {
       chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
     }
