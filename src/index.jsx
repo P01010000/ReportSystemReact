@@ -11,7 +11,7 @@ import rootReducer from './reducers';
 import SERVER_URL from './constants/server-url';
 import { loadBoardSettings } from './actions/fetchBoardSettings';
 import { loadData } from './actions/fetchData';
-import { RegisterLoginCallback } from './helper/login';
+import { Login, RegisterLoginCallback } from './helper/login';
 import { toggleAccordion, toggleReport } from './actions/accordionControl';
 
 /**
@@ -45,6 +45,7 @@ async function init() {
 
     await chayns.ready;
     chayns.register({ apiDialogs: true });
+    await Login();
 
     const tappElement = document.querySelector('.tapp');
     ReactDOM.render(
