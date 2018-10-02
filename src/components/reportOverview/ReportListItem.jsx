@@ -93,7 +93,7 @@ class ReportListItem extends React.Component {
 
     try {
       await fetch(
-        `${SERVER_URL}api/report/${this.props.id}`,
+        `${SERVER_URL}/api/report/${this.props.id}`,
         {
           method: 'PUT',
           headers: {
@@ -145,7 +145,7 @@ class ReportListItem extends React.Component {
         }
       );
       chayns.dialog.alert('Erfolg');
-      chayns.selectTapp({ id: chayns.env.site.tapp.id }, `show=${['yourTasks', 'openReports', 'yourReports'][this.props.type]}&id=${this.props.id}`);
+      chayns.selectTapp({ id: chayns.env.site.tapp.id }, `show=${{ 1: 'yourTasks', 2: 'openReports', 3: 'yourReports' }[this.props.type]}&id=${this.props.id}`);
     } catch (ex) {
       chayns.dialog.alert(`Es ist ein Fehler aufgetreten.\n${ex.Message}`);
     }
